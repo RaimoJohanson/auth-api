@@ -20,9 +20,9 @@ services:
     expose:
       - 5432
     environment:
-      - POSTGRES_DB=vetbase
-      - POSTGRES_USER=docker
-      - POSTGRES_PASSWORD=super1user2password
+      - POSTGRES_DB=database
+      - POSTGRES_USER=username
+      - POSTGRES_PASSWORD=password
 networks:
   vetnet:
     driver: bridge
