@@ -1,11 +1,25 @@
 version: "3"
 services:
   api:
-    # replace username/repo:tag with your name and image details
-    image: raimojohanson/vet-api:initial
+    image: raimojohanson/vet-api
     container_name: vet-api
     ports:
-      - "3010:3010"
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - HOST=vet-api
+      - PORT=3000
+      - DATABASE_CLIENT=postgresql
+      - DATABASE_NAME=vetbase
+      - DATABASE_HOST=vet-postgres
+      - DATABASE_PORT=5432
+      - DATABASE_USER=vetbasedocker
+      - DATABASE_PASSWORD=d4dde36d5b7717d7cfb2777e4dd6fe0f
+      - SALT_ROUNDS=10
+      - JWT_SECRET=d4dde36d5b7717d7cfb2777e4dd6fe0f
+      - JWT_ISSUER=accounts.gatey.ee
+      - JWT_AUDIENCE=gatey.ee
+      - JWT_EXPIRES_IN=24h
     networks:
       - vetnet
   postgres:
@@ -20,9 +34,9 @@ services:
     expose:
       - 5432
     environment:
-      - POSTGRES_DB=database
-      - POSTGRES_USER=username
-      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=vetbase
+      - POSTGRES_USER=vetbasedocker
+      - POSTGRES_PASSWORD=d4dde36d5b7717d7cfb2777e4dd6fe0f
 networks:
   vetnet:
     driver: bridge
