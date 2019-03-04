@@ -1,10 +1,11 @@
-FROM node:8-alpine
+FROM node:10-alpine
 
 # Copy over dep list
 COPY package.json /home/node/app/package.json
 RUN chown -R node:node /home/node/app
 
-RUN npm install -g pm2
+RUN npm install -g pm2 --no-optional
+RUN npm install -g knex
 
 # Set working directory
 WORKDIR /home/node/app

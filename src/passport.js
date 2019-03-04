@@ -1,27 +1,30 @@
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 
 const JwtStrategy = require('passport-jwt').Strategy;
 const LocalStrategy = require('passport-local').Strategy;
 const { ExtractJwt } = require('passport-jwt');
-const credentials = require('../credentials.json');
+const { JWT, SECURITY } = require('../config');
 
 const MESSAGES = {
   incorrect_email_or_password: 'Incorrect email or password',
+  token_missing_account_id: 'Token is missing account id',
+  missing_token: 'Token is missing',
+  invalid_token: 'Invalid token',
 };
 
-const opts = {
+const JWT_OPTIONS = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-  secretOrKey: credentials.JWT_SECRET,
-  issuer: credentials.JWT_ISSUER,
-  audience: credentials.JWT_AUDIENCE,
+  secretOrKey: JWT.SECRET,
+  issuer: JWT.ISSUER,
+  audience: JWT.AUDIENCE,
 };
 
 module.exports = (app, passport) => {
   const Account = app.get('bookshelf').model('accounts');
 
-  passport.use(new JwtStrategy(opts, async (payload, done) => {
-    if (!payload.id) return done('Token is missing account id');
-    return done(null, payload);
+  passport.use(new JwtStrategy(JWT_OPTIONS, async (jwtPayload, done) => {
+    if (!jwtPayload.id) return done(MESSAGES.token_missing_account_id);
+    return done(null, new Account({ id: jwtPayload.id }));
   }));
 
   passport.use(new LocalStrategy({
@@ -44,10 +47,11 @@ module.exports = (app, passport) => {
   return {
     passport,
     checkAuthentication: (req, res, next) => passport.authenticate('jwt', { session: false }, (error, account) => {
-      if (error) return res.status(500).json({ message: error });
-      if (!account) return res.status(401).json({ message: 'Missing token' });
+      if (error) return res.status(400).json({ message: error });
+      if (!account) return res.status(401).json({ message: MESSAGES.invalid_token });
       req.user = account;
       return next();
     })(req, res, next),
+    hashPlaintextPassword: plaintext => bcrypt.hash(plaintext, SECURITY.SALT_ROUNDS),
   };
 };

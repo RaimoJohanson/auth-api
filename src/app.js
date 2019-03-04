@@ -2,8 +2,9 @@
 const cors = require('cors');
 const passport = require('passport');
 const bodyParser = require('body-parser');
+
 const bookshelf = require('./bookshelf');
-const errorHandler = require('./_helpers/errorhandler');
+// const errorHandler = require('./_helpers/errorhandler');
 
 module.exports = (app) => {
   app.set('bookshelf', bookshelf);
@@ -25,5 +26,16 @@ module.exports = (app) => {
   const ROUTER = `${__dirname}/router`;
   require(ROUTER)(app); // eslint-disable-line
 
-  app.use(errorHandler);
+  app.use((req, res) => {
+    res.status(404).json({
+      error: {
+        message: 'Route not found',
+        code: 404,
+      },
+      request: {
+        method: req.method,
+        url: req.url,
+      },
+    });
+  });
 };

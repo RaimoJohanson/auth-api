@@ -1,19 +1,19 @@
-const config = require('./database_config');
+const databaseConfig = require('./database_config');
 
 module.exports = {
   development: {
-    client: config.development.client,
-    connection: config.development.connection,
+    client: databaseConfig.client,
+    connection: databaseConfig.connection,
     migrations: {
-      tableName: 'knex_migrations'
-    }
+      tableName: 'knex_migrations',
+    },
   },
   production: {
-    client:  config.production.client,
-    connection: config.production.connection,
+    client: databaseConfig.client,
+    connection: databaseConfig.connection,
     migrations: {
-      tableName: 'knex_migrations'
-    }
-  }
+      tableName: 'knex_migrations',
+    },
+  },
 
 };
