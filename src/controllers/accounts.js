@@ -4,7 +4,6 @@ const accountsService = require('../service/accounts');
 
 exports.fetchAll = app => async (req, res, next) => {
   const bookshelf = app.get('bookshelf');
-  console.log(req.user);
   try {
     const Model = bookshelf.model('accounts');
     const record = await new Model().fetchAll();
