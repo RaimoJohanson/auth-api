@@ -1,11 +1,11 @@
 {
-  "name": "vet-api",
+  "name": "auth-api",
   "repository": {
     "type": "git",
     "url": "https://github.com/RaimoJohanson/vet"
   },
   "version": "0.0.1",
-  "description": "Veterinary medicine predictive diagnostics system",
+  "description": "Authentication API",
   "main": "server.js",
   "scripts": {
     "start": "env $(cat .env) nodemon server.js",

@@ -13,10 +13,6 @@ module.exports = (app) => {
   router.route('/register')
     .post(authentication.register(app));
 
-  router.route('/').get((req, res) => {
-    res.json('API root');
-  });
-
   router.route('/accounts')
     .get(checkAuthentication, /* checkAuthorization, */ accounts.fetchAll(app))
     .post(checkAuthentication, /* checkAuthorization, */ accounts.create(app));

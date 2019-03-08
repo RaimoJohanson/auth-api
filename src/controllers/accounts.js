@@ -1,26 +1,24 @@
-
-const model = 'accounts';
 const accountsService = require('../service/accounts');
 
-exports.fetchAll = app => async (req, res, next) => {
+exports.fetchAll = app => async (req, res) => {
   const bookshelf = app.get('bookshelf');
   try {
     const Model = bookshelf.model('accounts');
     const record = await new Model().fetchAll();
     return res.json(record);
   } catch (error) {
-    return next(error);
+    return res.json({ message: error.message });
   }
 };
 
-exports.fetch = app => async (req, res, next) => {
+exports.fetch = app => async (req, res) => {
   const bookshelf = app.get('bookshelf');
   try {
-    const Model = bookshelf.model(model);
+    const Model = bookshelf.model('accounts');
     const record = await new Model({ id: req.params.account_id }).fetch();
     return res.json(record);
   } catch (error) {
-    return next(error);
+    return res.json({ message: error.message });
   }
 };
 
@@ -33,13 +31,18 @@ exports.create = app => async (req, res) => {
   }
 };
 
-exports.update = app => async (req, res, next) => {
-  const bookshelf = app.get('bookshelf');
+exports.update = app => async (req, res) => {
   try {
-    const Model = bookshelf.model(model);
-    const record = await new Model(req.body).save(req.body, { method: 'update' });
-    return res.json(record);
+    const bookshelf = app.get('bookshelf');
+    const id = req.params.account_id;
+    const Model = bookshelf.model('accounts');
+    const record = await new Model({ id }).fetch();
+    if (record) {
+      const result = await record.set({ updated_at: Date.now() }).save(req.body);
+      return res.json(result);
+    }
+    return res.json({ message: 'Account not found' });
   } catch (error) {
-    return next(error);
+    return res.json({ message: error.message });
   }
 };
