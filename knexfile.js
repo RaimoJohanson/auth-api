@@ -1,16 +1,30 @@
-const databaseConfig = require('./database_config');
+const { DATABASE } = require('./config');
 
 module.exports = {
   development: {
-    client: databaseConfig.client,
-    connection: databaseConfig.connection,
+    client: DATABASE.CLIENT,
+    connection: {
+      database: DATABASE.NAME,
+      host: DATABASE.HOST,
+      port: DATABASE.PORT,
+      user: DATABASE.USER,
+      password: DATABASE.PASSWORD,
+      charset: DATABASE.CHARSET,
+    },
     migrations: {
       tableName: 'knex_migrations',
     },
   },
   production: {
-    client: databaseConfig.client,
-    connection: databaseConfig.connection,
+    client: DATABASE.CLIENT,
+    connection: {
+      database: DATABASE.NAME,
+      host: DATABASE.HOST,
+      port: DATABASE.PORT,
+      user: DATABASE.USER,
+      password: DATABASE.PASSWORD,
+      charset: DATABASE.CHARSET,
+    },
     migrations: {
       tableName: 'knex_migrations',
     },

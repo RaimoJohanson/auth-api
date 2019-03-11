@@ -8,7 +8,7 @@ exports.login = app => async (req, res, next) => {
   const { passport } = app.get('passport');
   try {
     passport.authenticate('local', { session: false }, (error, account, info) => {
-      if (error) return res.status(500).json(error);
+      if (error) return res.status(500).json(error.message);
       if (!account) return res.status(401).json(info);
 
       const { password, ...accountWithoutPassword } = account.toJSON();
